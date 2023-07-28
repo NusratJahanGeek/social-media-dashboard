@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports</title>
+     <!-- Montserrat Font -->
+     <link
+     href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+     rel="stylesheet"
+   />
+   <!-- Material Icons -->
+   <link
+     rel="stylesheet"
+     href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+   />
+   <!-- Bootstrap Icons -->
+   <link
+     rel="stylesheet"
+     href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+   />
+   <!-- Custom CSS -->
+   <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+    <div class="grid-container">
+        <!-- Header -->
+        <header class="header">
+          <div class="menu-icon" onclick="openSidebar()">
+            <span class="material-symbols-outlined"> menu </span>
+          </div>
+         <!-- <div class="header-left">
+            <span class="material-symbols-outlined"> search </span>
+          </div> 
+          <div class="header-right">
+            <span class="material-symbols-outlined"> notifications </span>
+            <span class="material-symbols-outlined"> email </span>
+            <span class="material-symbols-outlined"> account_circle </span>
+          </div>  -->
+        </header>
+        <!-- End Header -->
+  
+        <!-- Sidebar -->
+        <aside id="sidebar">
+          <div class="sidebar-title">
+            <div class="sidebar-brand">
+              <img src="assets/Nusrat Geek.png" alt="" />
+            </div>
+            <span class="material-symbols-outlined" onclick="closeSidebar()">
+              close
+            </span>
+          </div>
+          <ul class="sidebar-list">
+            <li class="sidebar-list-item">
+              <a href="/">
+                <span class="material-symbols-outlined"> dashboard </span>
+                Dashboard
+              </a>
+            </li>
+            <!-- <li class="sidebar-list-item">
+              <a href="#">
+                <span class="material-symbols-outlined"> leaderboard </span>
+                Leaderboard
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="#">
+                <span class="material-symbols-outlined"> forum </span> Forum
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="#">
+                <span class="material-symbols-outlined"> phone </span> Support
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+              <a href="#">
+                <span class="material-symbols-outlined"> email </span> Messages
+              </a>
+            </li>  -->
+            <li class="sidebar-list-item">
+              <a href="/reports.html">
+                <span class="material-symbols-outlined"> poll </span> Reports
+              </a>
+            </li>
+            <li class="sidebar-list-item">
+                <a href="/target.html">
+                  <span class="material-symbols-outlined"> ads_click </span>
+                  Goal
+                </a>
+              </li>
+           <!-- <li class="sidebar-list-item">
+              <a href="#">
+                <span class="material-symbols-outlined"> settings </span> Settings
+              </a>
+            </li>  -->
+          </ul>
+        </aside>
+        <!-- End Sidebar -->
+       <!-- Main -->
+       <main class="main-container">
+        <table id="data-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Follower Count</th>
+                <th>Profile Visits</th>
+                <th>Total Interactions</th>
+                <th>Engagement Rate</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+
+           <!-- Modal for Edit Data -->
+        <div id="editModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeEditModal()">&times;</span>
+                <h2>Edit Data</h2>
+                <form id="editForm">
+                    <label for="date">Date:</label>
+                    <input type="date" id="date" name="date" required />
+                    <input type="hidden" id="editId" name="id" value="">
+
+
+                    <label for="followerCount">Follower Count:</label>
+                    <input type="number" id="followerCount" name="followerCount" required />
+
+                    <label for="profileVisits">Profile Visits:</label>
+                    <input type="number" id="profileVisits" name="profileVisits" required />
+
+                    <label for="totalInteractions">Total Post Interactions:</label>
+                    <input type="number" id="totalInteractions" name="totalInteractions" required />
+
+                    <button type="submit">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+<!-- Custom JS -->
+<script>
+    var sidebarOpen = false;
+    var sidebar = document.getElementById("sidebar");
+
+    function openSidebar() {
+        console.log("Opening sidebar");
+        if (!sidebarOpen) {
+            sidebar.classList.add("sidebar-responsive");
+            sidebarOpen = true;
+        }
+    }
+
+    function closeSidebar() {
+        console.log("Closing sidebar");
+        if (sidebarOpen) {
+            sidebar.classList.remove("sidebar-responsive");
+            sidebarOpen = false;
+        }
+    }
+
+    function fetchAndPopulateData() {
+        fetch("https://social-media-dashboard-server.vercel.app/instagram")
+            .then((response) => response.json())
+            .then((data) => {
+                const tableBody = document.querySelector("#data-table tbody");
+                tableBody.innerHTML = "";
+
+                data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                data.forEach((item) => {
+                    const row = document.createElement("tr");
+                    const engagementRate = calculateEngagementRate(item.followerCount, item.totalInteractions);
+                    row.innerHTML = `
+                        <td>${item.date}</td>
+                        <td>${item.followerCount}</td>
+                        <td>${item.profileVisits}</td>
+                        <td>${item.totalInteractions}</td>
+                        <td>${engagementRate}</td>
+                        <td>
+                            <button onclick="editData('${item._id}')">Edit</button>
+                            <button onclick="deleteData('${item._id}')">Delete</button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+
+                });
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+            });
+    }
+
+    function calculateEngagementRate(followerCount, totalInteractions) {
+        const engagementRate = (totalInteractions / followerCount) * 100;
+        return engagementRate.toFixed(2) + "%";
+    }
+
+    function editData(id) {
+  fetch(`https://social-media-dashboard-server.vercel.app/api/instagram/${id}`)
+    .then((response) => response.json())
+    .then((data) => {
+      // Populate the form fields with the fetched data
+      const editForm = document.getElementById("editForm");
+      editForm.date.value = data.date;
+      editForm.followerCount.value = data.followerCount;
+      editForm.profileVisits.value = data.profileVisits;
+      editForm.totalInteractions.value = data.totalInteractions;
+
+      // Set the ID in the hidden input field
+      document.getElementById("editId").value = data._id;
+
+      const editModal = document.getElementById("editModal");
+      editModal.style.display = "block";
+    })
+    .catch((error) => {
+      console.error("Error fetching data for editing:", error);
+    });
+}
+
+function submitEditForm() {
+  const editForm = document.getElementById("editForm");
+  const id = document.getElementById("editId").value;
+
+  // Create the payload object with all the form data
+  const payload = {
+    date: editForm.date.value,
+    followerCount: editForm.followerCount.value,
+    profileVisits: editForm.profileVisits.value,
+    totalInteractions: editForm.totalInteractions.value,
+  };
+
+  fetch(`https://social-media-dashboard-server.vercel.app/api/instagram/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+    headers: {
+      'Content-Type': 'application/json', // Use application/json header for JSON payload
+    },
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      closeEditModal();
+      fetchAndPopulateData();
+      showToast("Data edited successfully!");
+    })
+    .catch((error) => {
+      console.error("Error editing data:", error);
+    });
+}
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  fetchAndPopulateData();
+
+  const editForm = document.getElementById("editForm");
+  editForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    submitEditForm();
+  });
+});
+    function closeEditModal() {
+        const editModal = document.getElementById("editModal");
+        editModal.style.display = "none";
+    }
+
+    function deleteData(id) {
+        fetch(`https://social-media-dashboard-server.vercel.app/api/instagram/${id}`, {
+            method: 'DELETE',
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                // Implement the logic to handle the response after data deletion
+                // For example, you may want to remove the deleted row from the table.
+                fetchAndPopulateData();
+                showToast("Data deleted successfully!");
+            })
+            .catch((error) => {
+                console.error("Error deleting data:", error);
+            });
+    }
+
+    function showToast(message) {
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.innerText = message;
+        document.body.appendChild(toast);
+
+        setTimeout(() => {
+            toast.remove();
+        }, 3000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchAndPopulateData();
+    });
+</script>
+
+</body>
+</html>

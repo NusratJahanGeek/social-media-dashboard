@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Target</title>
+    <!-- Montserrat Font -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Material Icons -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0"
+    />
+    <!-- Bootstrap Icons -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="grid-container">
+      <!-- Header -->
+      <header class="header">
+        <div class="menu-icon" onclick="openSidebar()">
+          <span class="material-symbols-outlined"> menu </span>
+        </div>
+       <!-- <div class="header-left">
+          <span class="material-symbols-outlined"> search </span>
+        </div> 
+        <div class="header-right">
+          <span class="material-symbols-outlined"> notifications </span>
+          <span class="material-symbols-outlined"> email </span>
+          <span class="material-symbols-outlined"> account_circle </span>
+        </div>  -->
+      </header>
+      <!-- End Header -->
+
+      <!-- Sidebar -->
+      <aside id="sidebar">
+        <div class="sidebar-title">
+          <div class="sidebar-brand">
+            <img src="assets/Nusrat Geek.png" alt="" />
+          </div>
+          <span class="material-symbols-outlined" onclick="closeSidebar()">
+            close
+          </span>
+        </div>
+        <ul class="sidebar-list">
+          <li class="sidebar-list-item">
+            <a href="/">
+              <span class="material-symbols-outlined"> dashboard </span>
+              Dashboard
+            </a>
+          </li>
+           <!-- <li class="sidebar-list-item">
+            <a href="#">
+              <span class="material-symbols-outlined"> forum </span> Forum
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#">
+              <span class="material-symbols-outlined"> phone </span> Support
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="#">
+              <span class="material-symbols-outlined"> email </span> Messages
+            </a>
+          </li>  -->
+          <li class="sidebar-list-item">
+            <a href="/reports.html">
+              <span class="material-symbols-outlined"> poll </span> Reports
+            </a>
+          </li>
+          <li class="sidebar-list-item">
+            <a href="/target.html">
+              <span class="material-symbols-outlined"> ads_click </span>
+              Goal
+            </a>
+          </li>
+         <!-- <li class="sidebar-list-item">
+            <a href="#">
+              <span class="material-symbols-outlined"> settings </span> Settings
+            </a>
+          </li>  -->
+        </ul>
+      </aside>
+      <!-- End Sidebar -->
+
+     <!-- Main -->
+     <main class="main-container">
+     
+      <div class="data-header">
+        <h1 id="goalHeading">Loading...</h1>
+      <!-- Add the edit icon here -->
+      <span class="edit-icon material-symbols-outlined" onclick="editGoalHeading()">
+        edit_square
+      </span>
+      </div>
+    
+      <div class="main-cards">
+        <div class="card">
+          <div class="card-inner">
+            <h2>FOLLOWERS</h2>
+            <span class="material-symbols-outlined"> groups </span>
+          </div>
+          <div class="data-container">
+            <h1 id="followersCount">Loading...</h1>
+            <!-- Add the edit icon here -->
+            <span class="edit-icon material-symbols-outlined" onclick="editNumber('followersCount')">
+              edit_square
+            </span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-inner">
+            <h2>PROFILE VISITS</h2>
+            <span class="material-symbols-outlined"> person_search </span>
+          </div>
+          <div class="data-container">
+            <h1 id="profileVisitsCount">Loading...</h1>
+            <!-- Add the edit icon here -->
+            <span class="edit-icon material-symbols-outlined" onclick="editNumber('profileVisitsCount')">
+              edit_square
+            </span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-inner">
+            <h2>POST INTERACTIONS</h2>
+            <span class="material-symbols-outlined"> favorite </span>
+          </div>
+          <div class="data-container">
+            <h1 id="postInteractionsCount">Loading...</h1>
+            <!-- Add the edit icon here -->
+            <span class="edit-icon material-symbols-outlined" onclick="editNumber('postInteractionsCount')">
+              edit_square
+            </span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-inner">
+            <h2>ENGAGEMENT RATE</h2>
+            <span class="material-symbols-outlined"> ecg </span>
+          </div>
+          <div class="data-container">
+            <h1 id="engagementRate">Loading...</h1>
+            <!-- Add the edit icon here -->
+            <span class="edit-icon material-symbols-outlined" onclick="editEngagementRate()">
+              edit_square
+            </span>
+          </div>
+        </div>
+      </div>
+    
+      <div class="save-button">
+        <button class="btn" onclick="saveGoalData()">Save Goal</button>
+      </div>
+    </main>
+  <!-- End Main -->
+  
+    </div>
+
+    <script>
+       
+    // SIDEBAR TOGGLE
+    var sidebarOpen = false;
+    var sidebar = document.getElementById("sidebar");
+  
+    function openSidebar() {
+        if (!sidebarOpen) {
+          sidebar.classList.add("sidebar-responsive");
+          sidebarOpen = true;
+        }
+      }
+      
+      function closeSidebar() {
+        if (sidebarOpen) {
+          sidebar.classList.remove("sidebar-responsive");
+          sidebarOpen = false;
+        }
+      }
+      function saveGoalData() {
+        const goalHeading = document.getElementById('goalHeading').textContent;
+        const followers = document.getElementById('followersCount').textContent;
+        const profileVisits = document.getElementById('profileVisitsCount').textContent;
+        const postInteractions = document.getElementById('postInteractionsCount').textContent;
+        const engagementRate = document.getElementById('engagementRate').textContent;
+
+        const data = {
+          goalHeading,
+          followers,
+          profileVisits,
+          postInteractions,
+          engagementRate,
+        };
+
+        fetch('https://social-media-dashboard-server.vercel.app/api/goals', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .then((result) => {
+            console.log('Goal data saved:', result);
+            // Show success message or update UI as needed
+          })
+          .catch((error) => {
+            console.error('Error saving goal data:', error);
+            // Show error message or handle the error as needed
+          });
+      }
+
+       // Function to fetch the goal data from the API
+       function fetchGoalData() {
+    fetch('https://social-media-dashboard-server.vercel.app/api/goals')
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then((data) => {
+        // Sort the data array by date in descending order to get the latest data first
+        data.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // Assuming the data is an array and contains only one element in your case
+        const latestGoalData = data[0];
+        if (latestGoalData) {
+          // Update the goal heading
+          document.getElementById('goalHeading').textContent = latestGoalData.goalHeading;
+
+          // Update followers count
+          document.getElementById('followersCount').textContent = latestGoalData.followers;
+
+          // Update profile visits count
+          document.getElementById('profileVisitsCount').textContent = latestGoalData.profileVisits;
+
+          // Update post interactions count
+          document.getElementById('postInteractionsCount').textContent = latestGoalData.postInteractions;
+
+          // Update engagement rate
+          document.getElementById('engagementRate').textContent = (latestGoalData.engagementRate * 100) + "%";
+        }
+      })
+      .catch((error) => {
+        console.error('Error fetching goal data:', error);
+        // Show error message or handle the error as needed
+      });
+  }
+
+  // Call the fetchGoalData function to update the UI with the latest goal data
+  fetchGoalData();
+    </script>
+   <!-- Custom JS -->
+
+   <script src="js/target.js"></script>
+  </body>
+</html>
